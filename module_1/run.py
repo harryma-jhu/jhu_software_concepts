@@ -1,7 +1,6 @@
 from backbone import create_app
-
+# In __init__.py
 app = create_app()
 
 if __name__ == "__main__":
-    # Delete Deugg after completion
-    app.run(host='0.0.0.0', port=8000,debug=True)
+    app.run(host='0.0.0.0', port=8000)

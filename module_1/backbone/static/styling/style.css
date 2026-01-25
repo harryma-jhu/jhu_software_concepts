@@ -1,0 +1,56 @@
+body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f4; }
+
+/* Navigation Bar Styling */
+nav {
+    background-color: #348ee8; 
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
+nav a.active { 
+    background-color: #52acf5; 
+    border-radius: 4px;
+    padding: 5px 10px;
+    color: #fff;
+ }
+
+/* Home Page Styling */
+.homepage {
+    display: flex;
+    align-items: flex-start; 
+    padding: 50px;
+    gap: 50px;
+}
+
+/* 50/50 Bio/Profile Picture split*/
+.bio{
+    flex:1;
+    padding:20px;
+    box-sizing: border-box;
+}
+.profile-pic{
+    flex:1;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.profile-pic img {
+    max-width: 40%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Projects Page Styling */
+.projects-page {
+    display: flex;
+    padding: 50px;
+    align-items: center;
+}
+
+/* Contact Page Styling */
+.contact-page {
+    display: flex;
+    padding: 50px;
+    align-items: center;
+}

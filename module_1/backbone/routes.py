@@ -10,7 +10,7 @@ def index():
 def projects():
     return render_template('projects.html')
 
-@bp.route('/kcontact')
+@bp.route('/contact')
 def contact():
     return render_template('contact.html')
 

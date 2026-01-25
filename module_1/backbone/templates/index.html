@@ -1,0 +1,17 @@
+{% extends "fixed.html" %}
+
+{% block content %}
+<div class="homepage">
+    <div class = "bio">
+        <h1>Harry Ma</h1>
+        <h2>Engineer at Lockheed Martin</h2>
+        <div class = "bio-text">
+            <p>Harry Ma is a Level 2 Aerospace Engineer at Lockheed Martin, specializing in computer-aided design and simulation for the F-35 Canopy System. He holds a Bachelor of Science in Aerospace Engineering with a Minor in Mathematics from Texas A&M University and is currently pursuing a Master of Science in Data Science at Johns Hopkins University.</p>
+            <p>Driven by a lifelong passion for technology, Harry has successfully navigated diverse engineering roles and technical projects. He is focused on bridging the gap between aerospace engineering and advanced computing by expanding his expertise in data science and software engineering.</p>
+        </div>
+    </div>
+    <div class="profile-pic">
+        <img src="{{ url_for('static',filename='images/profile.jpg')}}" alt="Harry's Profile Picture">
+    </div>
+</div>
+{% endblock %}
