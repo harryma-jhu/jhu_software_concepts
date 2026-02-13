@@ -8,7 +8,7 @@ import psycopg
 base_url = "https://www.thegradcafe.com/survey/index.php?page="
 output_file = "applicant_data.json"
 # Number of entries to scrape
-target = 50
+target = 20
 # HTTP Headers - to mimic a browser request
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
 
@@ -74,17 +74,22 @@ def clean_data(main_row, secondary_row=None, comment_row=None):
     comment = comment_row.find('p').get_text(strip=True) if comment_row else None
     # Return cleaned data as a dictionary
     return{
-        'university': university,
-        'program': program_name,
-        'program_type': program_type,
-        'date_added': date_added,
-        'status': status,
-        'entry_url': entry_url,
-        'term': term,
-        'location': location,
-        'gpa': gpa,
-        'gre': gre,
-        'comments': comment
+        "program": f"{program_name} {program_type}" if program_type else program_name,
+        "university": university,
+        "comments": comment,
+        "date_added": date_added,
+        "overview_url": entry_url,
+        "applicant_status": status,
+        "status_date": None,      
+        "start_term": term,
+        "citizenship": location,
+        "gre_general": gre,
+        "gre_verbal": None,       
+        "gre_aw": None,           
+        "degree_level": program_type,
+        "gpa": gpa,
+        "llm-generated-program": None,   
+        "llm-generated-university": None 
     }
 # Iteratively scrape pages until target number of entries is reached
 def scrape_page():
@@ -134,8 +139,8 @@ def save_to_db(data_list):
             query = """
                 INSERT INTO applicants (
                     program, comments, date_added, url, status, term, 
-                    us_or_international, gpa, gre, degree
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    us_or_international, gpa, gre, gre_v, gre_aw, degree, llm_generated_program, llm_generated_university
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (url) DO NOTHING;
             """
             
@@ -148,13 +153,17 @@ def save_to_db(data_list):
                     prog_full,
                     entry['comments'],
                     entry['date_added'],
-                    entry['entry_url'],
-                    entry['status'],
-                    entry['term'],
-                    entry['location'],
+                    entry['overview_url'],
+                    entry['applicant_status'],
+                    entry['start_term'],
+                    entry['citizenship'],
                     float(entry['gpa']) if entry['gpa'] else None,
-                    float(entry['gre']) if entry['gre'] else None,
-                    entry['program_type']
+                    float(entry['gre_general']) if entry['gre_general'] else None,
+                    None, # gre_v
+                    None, # gre_aw
+                    entry['degree_level'],
+                    entry['llm-generated-program'],
+                    entry['llm-generated-university']
                 )
                 cur.execute(query, values)
             
@@ -163,5 +172,5 @@ def save_to_db(data_list):
 # Main execution
 if __name__ == "__main__":
     results = scrape_page()
-    save_data(results, output_file)
+    save_data(results)
     save_to_db(results)

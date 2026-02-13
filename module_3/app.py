@@ -37,7 +37,7 @@ def index():
 @app.route('/pull_data', methods=['POST'])
 def pull_data():
     try:
-        subprocess.Popen(["python3", "scrape.py"])
+        subprocess.Popen(["python3", "module_3/scrape.py"])
         # Fun popup that allows the user to know that the button worked
         # And scraper is running in the background
         flash("Background Data Pull Started! Check back in a few minutes.")
