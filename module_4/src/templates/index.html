@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Module 3: Graduate Admissions Analysis</title>
+    <style>
+       body { font-family: 'Arial'; background: #f4f4f4; padding: 20px; margin: 0; }
+        .container { background: white; padding: 20px; border-radius: 8px; max-width: 900px; margin: 50px auto auto; position: relative; }
+        
+        /* Requirement: Top Right Positioning for Update Analysis */
+        .top-right-nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+        }
+
+        .btn { background: #002d72; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-update { background: #28a745; } /* Green for update */
+        .info-text { display: block; font-size: 11px; color: #666; margin-top: 5px; max-width: 200px; }
+        
+        h1 { color: #002d72; border-bottom: 2px solid #ffb81c; }
+        .metric { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+            margin-top: 20px; 
+        }
+        .card { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #002d72; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .comparison-table th, .comparison-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    </style>
+</head>
+<div class="top-right-nav">
+        <form action="/update_analysis" method="post">
+            <button type="submit" class="btn btn-update">Update Analysis</button>
+            <span class="info-text">Refreshes the page with the newest results, provided no pull is currently running.</span>
+        </form>
+    </div>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div style="padding: 15px; background-color: #d4edda; color: #155724; margin-bottom: 20px; border-radius: 4px;">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h1>Admissions Data Dashboard</h1>
+
+        <div class="grid">
+            <div class="card"><h3>Q1: How many entries do you have in your database who have applied for Fall 2026</h3><p>{{ results.q1 }}</p></div>
+            <div class="card"><h3>Q2: What percentage of entries are from international students</h3><p>{{ results.q2 }}%</p></div>
+            <div class="card">
+                <h3>Q3: What is the average GPA, GRE, GRE V, GRE AW of applicants who provide these metrics?</h3>
+                <p>
+                    GPA: {{ results.q3[0] }}, 
+                    GRE: {{ results.q3[1] }}, 
+                    GRE V: {{ results.q3[2] }}, 
+                    GRE AW: {{ results.q3[3] }}
+                </p>
+            </div>
+            <div class="card"><h3>Q4: What is their average GPA of American students in Fall 2026</h3><p>{{ results.q4 }}</p></div>
+            <div class="card"><h3>Q5: What percent of entries for Fall 2025 are Acceptances</h3><p>{{ results.q5 }}%</p></div>
+            <div class="card"><h3>Q6: What is the average GPA of applicants who applied for Fall 2026 who are Acceptances</h3><p>{{ results.q6 }}</p></div>
+            <div class="card"><h3>Q7: How many entries are from applicants who applied to JHU for a masters degrees in Computer Science?</h3><p>{{ results.q7 }}</p></div>
+            
+            <div class="card bonus"><h3>Extra1: Total Number of Applicant Entries</h3><p>{{ results.b1 }}</p></div>
+            <div class="card bonus"><h3>Extra2: Entries with Mentions of 'Financial Aid'</h3><p>{{ results.b2 }}</p></div>
+        </div>
+
+        <h3>How many entries from 2026 are acceptances from applicants who applied to Georgetown University, MIT, Stanford University, or Carnegie Mellon University for a PhD in Computer Science?</h3>
+        <table class="comparison-table">
+            <tr>
+                <th>Query Method</th>
+                <th>Result (PhD CS Acceptances 2026)</th>
+            </tr>
+            <tr>
+                <td>Using Raw Downloaded Fields (Q8)</td>
+                <td>{{ results.q8 }}</td>
+            </tr>
+            <tr>
+                <td>Using LLM Generated Fields (Q9)</td>
+                <td>{{ results.q9 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="data-controls" style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+    <h3>Data Management</h3>
+    
+    <form action="/pull_data" method="post">
+        <button type="submit" class="btn" style="background-color: #002d72; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            Pull Data
+        </button>
+        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+            <strong>What does this do?</strong> This button triggers a background script that visits Grad Cafe to search for new applicant submissions. Any new data found will be automatically cleaned and added to our database for analysis.
+        </p>
+    </form>
+</div>
+
+</body>
+</html>
