@@ -1,16 +1,21 @@
 # Import necessary libraries and modules
-from flask import Flask, render_template, url_for, redirect, flash
+from flask import Flask, jsonify, render_template, redirect, Blueprint
 import psycopg
-import query_data
+from src import query_data
 import subprocess
+from src.scrape import scrape_page, save_to_db
 
-app = Flask(__name__)
+#app = Flask(__name__)
+bp = Blueprint('app', __name__)
 # Connection info 
 CONN_INFO = "dbname=postgres user=harryma"
 # Secret key needed for Flask Flash messages
-app.secret_key = 'secret'
+#bp.secret_key = 'secret'
 
-@app.route('/')
+# Global is-busy variable to track state 
+is_busy = False
+
+@bp.route('/')
 def index():
     with psycopg.connect(CONN_INFO) as conn:
         with conn.cursor() as cur:
@@ -34,27 +39,35 @@ def index():
 
 # Function that pulls new data from scraper.py and launches it in the background
 # Triggered by the 'Pull Data Button' on the dashboard
-@app.route('/pull_data', methods=['POST'])
+@bp.route('/pull_data', methods=['POST'])
 def pull_data():
+    global is_busy
+    if is_busy:
+        return jsonify({'busy':True}),409
+    is_busy = True
     try:
-        subprocess.Popen(["python3", "module_3/scrape.py"])
-        # Fun popup that allows the user to know that the button worked
-        # And scraper is running in the background
-        flash("Background Data Pull Started! Check back in a few minutes.")
+        # subprocess.Popen(["python3", "src/scrape.py"]) # Modified to Module 4 Path
+        # REVISIT: Subprocesses does not hit testing - shouldve kept as is and extended coverage in extras-test
+        results = scrape_page()
+        save_to_db(results)
+        return jsonify({"ok": True}), 200
+        # Deleted Flash messages 
     except Exception as e:
-        flash(f"Error starting scraper: {e}")
-    # Keeps user on homepage
-    return redirect(url_for('index'))
+        return jsonify({"ok": False}), 500
+    finally: # Reset busy state
+        is_busy = False
 
 # Function to update the analysis dashboard with the latest database entries
 # Triggered by the 'Update Analysis' button on the dashboard
-@app.route('/update_analysis', methods=['POST'])
+@bp.route('/update_analysis', methods=['POST'])
 def update_analysis():
-    flash("Analysis Updated with latest database entries!")
+    global is_busy
+    if is_busy:
+        return jsonify({'busy':True}),409
     # Keeps user on homepage
-    return redirect(url_for('index'))
+    return redirect('/')
 
 
 if __name__ == '__main__':
     # Running on localhost:8080 with debug mode on for easier development 
-    app.run(debug=True, port=8080)
+    bp.run(debug=True, port=8080)

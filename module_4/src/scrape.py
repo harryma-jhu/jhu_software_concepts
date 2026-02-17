@@ -4,6 +4,7 @@ import json
 import re
 import psycopg
 
+
 # Configuration
 base_url = "https://www.thegradcafe.com/survey/index.php?page="
 output_file = "applicant_data.json"
