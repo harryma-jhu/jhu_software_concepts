@@ -40,5 +40,5 @@ jobs:
           DATABASE_URL: postgresql://harryma@localhost:5432/postgres
         run: |
           cd module_4
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+          export PYTHONPATH=$PYTHONPATH:.
           pytest --cov=src --cov-report=term-missing
