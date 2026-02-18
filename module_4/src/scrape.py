@@ -4,7 +4,12 @@ import json
 import re
 import psycopg
 
-
+"""
+Scraper Module for GradCafe
+---------------------------
+This module handles the extraction of applicant data from the GradCafe survey pages
+and manages the storage of that data into both JSON and PostgreSQL formats.
+"""
 # Configuration
 base_url = "https://www.thegradcafe.com/survey/index.php?page="
 output_file = "applicant_data.json"
@@ -16,6 +21,12 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleW
 # Function to get HTML content from a URL
 # Try/Except block to handle HTTP errors
 def get_html(url):
+    """
+    Fetches the raw HTML content from a given URL.
+    
+    :param url: The string URL to fetch.
+    :return: HTML content or None if an error occurs.
+    """
     try:
         req =request.Request(url, headers=HEADERS)
         with request.urlopen(req) as response:
@@ -31,19 +42,20 @@ def get_html(url):
         else:
             print(f"HTTP Error {err.code} for URL: {url}")
         return None
-# Function to extract GPA/GRE data using regex    
 def regex_extract(pattern, grade_text):
+    '''Function to extract GPA/GRE data using regex    '''
     # GRE ### or GPA #.##
     match = re.search(pattern, grade_text)
     return match.group(1) if match else None
-# Function to save scraped data (list of dictionaries) to a JSON file
+
 def save_data(data):
+    '''Function to save scraped data (list of dictionaries) to a JSON file'''
     # Indent = 4 for readability
     with open("applicant_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-# Function to clean and extract relevant data from HTML rows
 def clean_data(main_row, secondary_row=None, comment_row=None):
+    '''Function to clean and extract relevant data from HTML rows'''
     # Parsed main row content: application information
     col = main_row.find_all('td')
     # University name
@@ -92,8 +104,9 @@ def clean_data(main_row, secondary_row=None, comment_row=None):
         "llm-generated-program": None,   
         "llm-generated-university": None 
     }
-# Iteratively scrape pages until target number of entries is reached
+
 def scrape_page():
+    '''Iteratively scrape pages until target number of entries is reached'''
     # List to hold all scraped results(dictionaries)
     reults = []
     # Start from page 1

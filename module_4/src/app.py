@@ -41,6 +41,8 @@ def index():
 # Triggered by the 'Pull Data Button' on the dashboard
 @bp.route('/pull_data', methods=['POST'])
 def pull_data():
+    ''' Function that pulls new data from scraper.py and launches it in the background
+        Triggered by the 'Pull Data Button' on the dashboard'''
     global is_busy
     if is_busy:
         return jsonify({'busy':True}),409
@@ -60,6 +62,8 @@ def pull_data():
 # Function to update the analysis dashboard with the latest database entries
 # Triggered by the 'Update Analysis' button on the dashboard
 @bp.route('/update_analysis', methods=['POST'])
+'''# Function to update the analysis dashboard with the latest database entries
+# Triggered by the 'Update Analysis' button on the dashboard'''
 def update_analysis():
     global is_busy
     if is_busy:

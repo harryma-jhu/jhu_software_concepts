@@ -11,6 +11,7 @@ def get_connection():
     return conn
 
 def create_table():
+    '''Create SQL table in localhost'''
     connection = get_connection()
     # Orginal framework
     with connection.cursor() as cur:
@@ -38,6 +39,8 @@ def create_table():
 # Read in json data file and insert into database, 
 # Ignoring duplicates based on unique url constraint
 def load_data():
+    '''# Read in json data file and insert into database, 
+     Ignoring duplicates based on unique url constraint'''
     connection = get_connection()
     with connection.cursor() as cur:
         # Update to current path

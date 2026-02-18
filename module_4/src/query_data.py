@@ -1,18 +1,19 @@
-# Q1 - Fall 2026 Count Function
 def get_fall2026_count(cur):
+    '''# Q1 - Fall 2026 Count Function'''
     cur.execute("SELECT COUNT(*) FROM applicants WHERE term ILIKE '%Fall 2026%';")
     return cur.fetchone()[0]
 
-# Q2 - International Percentage Function
 def get_intl_percentage(cur):
+    '''Q2 - International Percentage Function'''
     cur.execute("""
         SELECT ROUND((COUNT(*) FILTER (WHERE us_or_international = 'International')::numeric / 
         NULLIF(COUNT(*), 0)::numeric) * 100, 2) FROM applicants;
     """)
     return cur.fetchone()[0]
 
-# Q3 - Average Grade Metrics Function
+
 def get_avg_metrics(cur):
+    '''Q3 - Average Grade Metrics Function'''
     cur.execute("""
         SELECT 
             ROUND(AVG(gpa)::numeric, 2), 
@@ -23,40 +24,41 @@ def get_avg_metrics(cur):
     """)
     return cur.fetchone()
 
-# Q4 - Average GPA for American Applicants Fall 2026 Function
 def get_american_gpa_2026(cur):
+    '''Q4 - Average GPA for American Applicants Fall 2026 Function'''
     cur.execute("""
         SELECT ROUND(AVG(gpa)::numeric, 2) FROM applicants 
         WHERE us_or_international = 'American' AND term ILIKE '%Fall 2026%';
     """)
     return cur.fetchone()[0]
 
-# Q5 - Acceptance Rate for Fall 2025 Function
+
 def get_fall2025_acc_rate(cur):
+    '''Q5 - Acceptance Rate for Fall 2025 Function'''
     cur.execute("""
         SELECT ROUND((COUNT(*) FILTER (WHERE status = 'Accepted' AND term ILIKE '%Fall 2025%')::numeric / 
         NULLIF(COUNT(*) FILTER (WHERE term ILIKE '%Fall 2025%'), 0)::numeric) * 100, 2) FROM applicants;
     """)
     return cur.fetchone()[0]
 
-# Q6 - GPA of Accepted Applicants Fall 2026 Function
 def get_gpa_2026_acceptances(cur):
+    '''# Q6 - GPA of Accepted Applicants Fall 2026 Function'''
     cur.execute("""
         SELECT ROUND(AVG(gpa)::numeric, 2) FROM applicants 
         WHERE term ILIKE '%Fall 2026%' AND status = 'Accepted';
     """)
     return cur.fetchone()[0]
 
-# Q7 - JHU MS CS Applicants Function
 def get_jhu_cs_masters(cur):
+    '''# Q7 - JHU MS CS Applicants Function'''
     cur.execute("""
         SELECT COUNT(*) FROM applicants 
         WHERE program ILIKE '%Johns Hopkins%' AND degree ILIKE '%MS%' AND program ILIKE '%Computer Science%';
     """)
     return cur.fetchone()[0]
 
-# Q8 - Elite Schools PhD Programs (Raw) Function
 def get_elite_phd(cur):
+    '''# Q8 - Elite Schools PhD Programs (Raw) Function'''
     cur.execute("""
         SELECT COUNT(*) FROM applicants 
         WHERE term ILIKE '%2026%' AND status = 'Accepted' AND degree ILIKE '%PhD%' 
@@ -66,8 +68,8 @@ def get_elite_phd(cur):
     """)
     return cur.fetchone()[0]
 
-# Q9 - Elite Schools PhD Programs (LLM-Generated) Function
 def get_elite_phd_llm(cur):
+    '''# Q9 - Elite Schools PhD Programs (LLM-Generated) Function'''
     cur.execute("""
         SELECT COUNT(*) FROM applicants 
         WHERE term ILIKE '%2026%' AND status = 'Accepted' AND degree ILIKE '%PhD%' 
@@ -79,13 +81,13 @@ def get_elite_phd_llm(cur):
 
 # ADDING BONUS QUERIES BELOW
 
-# B1 - Total Applicants Function
 def get_total_count(cur):
+    '''# Bonus1 - Total Applicants Function'''
     query = "SELECT COUNT(*) FROM applicants;"
     cur.execute(query)
     result = cur.fetchone()
     return result[0] if result else 0
-# B2 - Count of Mentions of 'Financial Aid' in Comments Function
 def get_financial_aid_count(cur):
+    '''# Bonus2 - Count of Mentions of 'Financial Aid' in Comments Function'''
     cur.execute("SELECT COUNT(*) FROM applicants WHERE comments ILIKE '%financial aid%';")
     return cur.fetchone()[0]
