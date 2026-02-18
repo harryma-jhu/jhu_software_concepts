@@ -7,6 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os 
 import sys 
+autodoc_mock_imports = ['pyscopg']
 sys.path.insert(0,os.path.abspath('../../src'))
 
 project = 'Grad Cafe Analysis'
@@ -31,3 +32,4 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
