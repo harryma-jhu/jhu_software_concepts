@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os 
 import sys 
-autodoc_mock_imports = ['pyscopg']
+autodoc_mock_imports = ['psycopg']
 sys.path.insert(0,os.path.abspath('../../src'))
 
 project = 'Grad Cafe Analysis'

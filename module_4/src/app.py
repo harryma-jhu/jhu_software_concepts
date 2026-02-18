@@ -1,7 +1,7 @@
 # Import necessary libraries and modules
 from flask import Flask, jsonify, render_template, redirect, Blueprint
 import psycopg
-from src import query_data
+import query_data
 import subprocess
 from src.scrape import scrape_page, save_to_db
 
