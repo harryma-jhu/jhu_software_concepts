@@ -8,7 +8,7 @@ from src.scrape import scrape_page, save_to_db
 #app = Flask(__name__)
 bp = Blueprint('app', __name__)
 # Connection info 
-CONN_INFO = "dbname=postgres user=harryma"
+CONN_INFO = "host=localhost dbname=postgres user=harryma"
 # Secret key needed for Flask Flash messages
 #bp.secret_key = 'secret'
 

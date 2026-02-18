@@ -4,12 +4,12 @@ import psycopg
 import src.query_data as qd 
 import src.load_data as ld 
 
-conn_info = "dbname=postgres user=harryma"
+conn_info =("host=localhost dbname=postgres user=harryma")
 
 @pytest.mark.db 
 def test_db_insert(client, monkeypatch):
     # Establish the test connection
-    with psycopg.connect("dbname=postgres user=harryma") as conn:
+    with psycopg.connect(conn_info) as conn:
         # FORCE the module's connection variable to be our test connection
         # This prevents the 'NoneType' AttributeError
         monkeypatch.setattr(ld, "conn", conn)

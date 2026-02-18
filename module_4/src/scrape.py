@@ -130,7 +130,7 @@ def scrape_page():
 
 def save_to_db(data_list):
     """Inserts scraped data directly into PostgreSQL."""
-    conn_info = "dbname=postgres user=harryma"
+    conn_info = "host=localhost dbname=postgres user=harryma"
     with psycopg.connect(conn_info) as conn:
         with conn.cursor() as cur:
             # Removed print line - not needed for final version

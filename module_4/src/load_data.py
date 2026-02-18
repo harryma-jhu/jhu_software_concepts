@@ -7,7 +7,7 @@ def get_connection():
     global conn
     # Verify connection 
     if conn is None:
-        conn = psycopg.connect("dbname=postgres user=harryma")
+        conn = psycopg.connect("host=localhost dbname=postgres user=harryma")
     return conn
 
 def create_table():
