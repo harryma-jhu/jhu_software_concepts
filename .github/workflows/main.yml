@@ -41,4 +41,4 @@ jobs:
         run: |
           cd module_4
           export PYTHONPATH=$PYTHONPATH:.
-          pytest --cov=src --cov-report=term-missing
+          pytest --cov=src --cov-fail-under=100 --cov-report=term-missing
