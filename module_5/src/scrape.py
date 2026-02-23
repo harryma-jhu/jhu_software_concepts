@@ -1,29 +1,28 @@
-from urllib import request,error
-from bs4 import BeautifulSoup
 import json
 import re
+from urllib import request,error
 import psycopg
+from bs4 import BeautifulSoup
 
-"""
-Scraper Module for GradCafe
----------------------------
-This module handles the extraction of applicant data from the GradCafe survey pages
-and manages the storage of that data into both JSON and PostgreSQL formats.
-"""
 # Configuration
-base_url = "https://www.thegradcafe.com/survey/index.php?page="
-output_file = "applicant_data.json"
+BASE_URL = "https://www.thegradcafe.com/survey/index.php?page="
+OUTPUT_FILE = "applicant_data.json"
 # Number of entries to scrape
-target = 20
+TARGET = 20
 # HTTP Headers - to mimic a browser request
-HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'}
+HEADERS = {'User-Agent': (
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+    'AppleWebKit/537.36 (KHTML, like Gecko) '
+    'Chrome/119.0.0.0 Safari/537.36'
+    )
+    }
 
 # Function to get HTML content from a URL
 # Try/Except block to handle HTTP errors
 def get_html(url):
     """
+
     Fetches the raw HTML content from a given URL.
-    
     :param url: The string URL to fetch.
     :return: HTML content or None if an error occurs.
     """
@@ -106,14 +105,14 @@ def clean_data(main_row, secondary_row=None, comment_row=None):
     }
 
 def scrape_page():
-    '''Iteratively scrape pages until target number of entries is reached'''
+    '''Iteratively scrape pages until TARGET number of entries is reached'''
     # List to hold all scraped results(dictionaries)
     reults = []
     # Start from page 1
     page = 1 
-    while len(reults) < target:
+    while len(reults) < TARGET:
         # Construct URL for the current page
-        url = f'{base_url}{page}'
+        url = f'{BASE_URL}{page}'
         # Get HTML content
         html_response = get_html(url)
         # Parse HTML using BeautifulSoup
