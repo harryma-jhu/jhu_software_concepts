@@ -3,10 +3,10 @@ This is the main application where the frontend
 is loaded and launched for the user to interact with
 '''
 # Import necessary libraries and modules
+# import subprocess
 from flask import Flask, jsonify, render_template, redirect, Blueprint
 import psycopg
 import query_data
-import subprocess
 from scrape import scrape_page, save_to_db
 
 #app = Flask(__name__)
@@ -56,12 +56,12 @@ def pull_data():
     IS_BUSY = True
     try:
         # subprocess.Popen(["python3", "src/scrape.py"]) # Modified to Module 4 Path
-        # REVISIT: Subprocesses does not hit testing - shouldve kept as is and 
+        # REVISIT: Subprocesses does not hit testing - shouldve kept as is and
         # Extended coverage in extras-test
         results = scrape_page()
         save_to_db(results)
         return jsonify({"ok": True}), 200
-        # Deleted Flash messages 
+        # Deleted Flash messages
     # Updating Exeptions to address generalized exception msg
     # except Exception as e:
         # return jsonify({"ok": False}), 500
@@ -87,5 +87,7 @@ def update_analysis():
 
 
 if __name__ == '__main__':
-    # Running on localhost:8080 with debug mode on for easier development 
-    bp.run(debug=True, port=8080)
+    # Running on localhost:8080 with debug mode on for easier development
+    app = Flask(__name__)
+    app.register_blueprint(bp)
+    app.run(debug=True,port=8080)
