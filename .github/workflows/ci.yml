@@ -41,7 +41,7 @@ jobs:
     - name: Generate Dependency Graph
       run: |
         pydeps src/ --noshow -T svg -o dependency.svg
-        if [ ! -f dependency.svg ]; then echo "dependency.svg missing"; exit 1; f
+        if [ ! -f dependency.svg ]; then echo "dependency.svg missing"; exit 1; fi
 
     # 3. Run Snyk Test
     - name: Run Snyk Test
