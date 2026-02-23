@@ -35,7 +35,7 @@ jobs:
 
     # 1. Run Pylint (Fail if under 10)
     - name: Run Pylint
-      run: pylint src/ --rcfile = .pylintrc --fail-under=10
+      run: pylint src/ --rcfile=.pylintrc --fail-under=10
 
     # 2. Generate Dependency Graph (Fail if missing)
     - name: Generate Dependency Graph
