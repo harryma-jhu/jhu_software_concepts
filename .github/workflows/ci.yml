@@ -32,6 +32,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install .
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+  
+    - name: Run Snyk Test
+      run: snyk test --severity-threshold=high
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     # 1. Run Pylint (Fail if under 10)
     - name: Run Pylint
