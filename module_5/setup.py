@@ -5,6 +5,7 @@ setup(
     version='0.1',
     description="Software Assurance and Secure SQL Project",
     author='Harry Ma',
+    package_dir={'': 'src'},
     packages=find_packages(where='src'),
     include_package_data=True,
     install_requires=[
