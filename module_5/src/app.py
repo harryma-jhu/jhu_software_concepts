@@ -4,27 +4,34 @@ is loaded and launched for the user to interact with
 '''
 # Import necessary libraries and modules
 # import subprocess
+import os 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, redirect, Blueprint
 import psycopg
 import query_data
 from scrape import scrape_page, save_to_db
 
+load_dotenv()
+
 #app = Flask(__name__)
 bp = Blueprint('app', __name__)
 # Connection info
-CONN_INFO = "host=localhost dbname=postgres user=harryma"
-# Secret key needed for Flask Flash messages
-#bp.secret_key = 'secret'
+
+def get_db_connection_info():
+    return psycopg.connect(
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT"),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER")
+    )
 # Global is-busy variable to track state
-"""
-setup
-"""
+
 IS_BUSY = False
 
 @bp.route('/')
 def index():
     '''Main Page'''
-    with psycopg.connect(CONN_INFO) as conn:
+    with get_db_connection_info() as conn:
         with conn.cursor() as cur:
             # Aggregate all function results into one dictionary
             results = {

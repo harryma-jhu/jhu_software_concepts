@@ -1,18 +1,22 @@
 import json
+import os 
+from dotenv import load_dotenv
 import psycopg
 from psycopg import sql
  
 
 CONN = None
-# Safe limit set for defensive mechanism 
-# Maximum allowed limit 
-SAFE_LIMIT = 1000
-
+load_dotenv()
 def get_connection():
     global CONN
     # Verify connection 
     if CONN is None:
-        CONN = psycopg.connect("host=localhost dbname=postgres user=harryma")
+        CONN = psycopg.connect(
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT"),
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER")
+            )
     return CONN
 
 def create_table():
@@ -42,7 +46,7 @@ def create_table():
     """).format(table=sql.Identifier(table_name))
 
     with connection.cursor() as cur:
-        cur.execute(query,(SAFE_LIMIT,))
+        cur.execute(query)
     connection.commit()
 
 # Read in json data file and insert into database, 
