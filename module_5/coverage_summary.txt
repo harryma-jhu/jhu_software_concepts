@@ -1,0 +1,43 @@
+(.venv) harryma@Harrys-MacBook-Pro-2 module_4 % python3 -m pytest
+================================= test session starts =================================
+platform darwin -- Python 3.13.7, pytest-9.0.2, pluggy-1.6.0 -- /Users/harryma/Modern Software Concepts/jhu_software_concepts/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/harryma/Modern Software Concepts/jhu_software_concepts/module_4
+configfile: pytest.ini
+plugins: anyio-4.12.1, cov-7.0.0
+collected 18 items                                                                    
+
+tests/test_analysis_format.py::test_analysis_format PASSED                      [  5%]
+tests/test_buttons.py::test_pull_data_button PASSED                             [ 11%]
+tests/test_buttons.py::test_busy_state[/pull_data] PASSED                       [ 16%]
+tests/test_buttons.py::test_busy_state[/update_analysis] PASSED                 [ 22%]
+tests/test_db_insert.py::test_db_insert PASSED                                  [ 27%]
+tests/test_extra_coverage.py::test_pull_data_exception PASSED                   [ 33%]
+tests/test_extra_coverage.py::test_pull_data_busy_conflict PASSED               [ 38%]
+tests/test_extra_coverage.py::test_load_data_full_coverage PASSED               [ 44%]
+tests/test_extra_coverage.py::test_load_data_loop_coverage PASSED               [ 50%]
+tests/test_extra_coverage.py::test_get_html_http_errors PASSED                  [ 55%]
+tests/test_extra_coverage.py::test_get_html_bad_request PASSED                  [ 61%]
+tests/test_extra_coverage.py::test_save_to_db_coverage PASSED                   [ 66%]
+tests/test_extra_coverage.py::test_regex_extract_none PASSED                    [ 72%]
+tests/test_extra_coverage.py::test_save_data_file PASSED                        [ 77%]
+tests/test_extra_coverage.py::test_get_html_generic_http_error PASSED           [ 83%]
+tests/test_flask_page.py::test_index_page PASSED                                [ 88%]
+tests/test_integration_end_to_end.py::test_end_to_end_pipeline PASSED           [ 94%]
+tests/test_integration_end_to_end.py::test_multiple_pulls_idempotency PASSED    [100%]
+
+=================================== tests coverage ====================================
+__________________ coverage: platform darwin, python 3.13.7-final-0 ___________________
+
+Name                        Stmts   Miss  Cover   Missing
+---------------------------------------------------------
+src/__init__.py                 6      0   100%
+src/app.py                     31      0   100%
+src/load_data.py               22      0   100%
+src/query_data.py              35      0   100%
+src/scrape.py                  79      0   100%
+src/templates/__init__.py       0      0   100%
+---------------------------------------------------------
+TOTAL                         173      0   100%
+Required test coverage of 100% reached. Total coverage: 100.00%
+================================= 18 passed in 4.37s ==================================
