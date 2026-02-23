@@ -32,16 +32,23 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install .
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+  
+    - name: Run Snyk Test
+      run: snyk test --severity-threshold=high
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     # 1. Run Pylint (Fail if under 10)
     - name: Run Pylint
-      run: pylint src/ --rcfile=.pylintrc --fail-under=10
+      run: pylint src/ --rcfile=../.pylintrc --fail-under=10
 
     # 2. Generate Dependency Graph (Fail if missing)
     - name: Generate Dependency Graph
       run: |
         pydeps src/ --noshow -T svg -o dependency.svg
-        if [ ! -f dependency.svg ]; then echo "dependency.svg missing"; exit 1; f
+        if [ ! -f dependency.svg ]; then echo "dependency.svg missing"; exit 1; fi
 
     # 3. Run Snyk Test
     - name: Run Snyk Test
