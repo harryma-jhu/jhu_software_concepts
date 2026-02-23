@@ -4,6 +4,9 @@ from psycopg import sql
  
 
 CONN = None
+# Safe limit set for defensive mechanism 
+# Maximum allowed limit 
+SAFE_LIMIT = 1000
 
 def get_connection():
     global CONN
@@ -39,7 +42,7 @@ def create_table():
     """).format(table=sql.Identifier(table_name))
 
     with connection.cursor() as cur:
-        cur.execute(query)
+        cur.execute(query,(SAFE_LIMIT,))
     connection.commit()
 
 # Read in json data file and insert into database, 
@@ -58,6 +61,7 @@ def load_data():
                 prgm_name = ' '.join(record.get('program').split(' ')[:-1])
                 prgm = f'{record.get("university")} {prgm_name}'
                 # SQL insert
+                # Could add LIMIT 1 at the end to set max
                 insert_stmt = """
                     INSERT INTO applicants (
                         program, comments, date_added, url, status, term, 
@@ -77,6 +81,7 @@ def load_data():
                     record.get('degree_level'), record.get('llm-generated-program'),
                     record.get('llm-generated-university')
                 )
+                # Limit not needed since its 1 record per insert 
                 cur.execute(insert_stmt, params)
     connection.commit()
 
