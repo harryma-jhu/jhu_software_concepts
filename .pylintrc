@@ -1,0 +1,12 @@
+[MESSAGES CONTROL]
+disable=import-error,
+        global-statement,
+        global-variable-not-assigned,
+        missing-final-newline,
+        missing-function-docstring,
+        missing-module-docstring,
+        import-outside-toplevel,
+        trailing-whitespace,
+        no-member,
+        too-many-locals
+
