@@ -1,1 +1,3 @@
-module_2/llm_hosting/models/
+.env
+__pycache__/
+.venv/
