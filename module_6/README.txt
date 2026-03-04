@@ -1,42 +1,35 @@
 Name: Harry Ma (hm41)
 
-Module Info: Module 5 - Software Assurance + Secure SQL (Due: 02/23/26 11:59PM ET)
+Module Info: Module 6 - Deploy Anywhere (Due: 03/03/26 11:59PM ET)
 
 Approach: 
-Software Assurance & CI/CD: The primary focus of this module was "shifting left" on security. 
-A GitHub Actions pipeline was implemented to enforce code quality and security standards before 
-any code is merged. This includes a strict Pylint gate requiring a 10/10 score and automated 
-Snyk scans to detect vulnerabilities in the dependency tree.
-HOW TO Run Pylint: 
-In Terminal - cd to module_5 folder -> run 'pylint src/' 
+Architecture & Microservices: The core objective of this module was the 
+refactoring of a monolithic Flask application into a decoupled microservice 
+architecture. The system now utilizes Docker Compose to orchestrate four 
+distinct services: a Flask web frontend, a Python background worker, a 
+PostgreSQL database, and a RabbitMQ message broker. This separation ensures 
+that long-running tasks, such as data ingestion and analytics recomputation, 
+do not block the web tier, improving overall system responsiveness and reliability.
 
-SQL Injection Defense: The entire database interaction layer was refactored to eliminate unsafe 
-string formatting. Using psycopg SQL composition (sql.SQL, sql.Identifier, and sql.Placeholder), 
-dynamic components like table names are safely quoted and user-supplied values are handled via 
-server-side parameter binding. Additionally, an inherent LIMIT was applied to all queries to 
-prevent mass data exfiltration.
+Asynchronous Task Processing: To handle data-modifying operations safely, a producer/consumer 
+pattern was implemented via RabbitMQ. The web application acts as a producer, publishing tasks 
+(e.g., recompute_analytics) to a durable exchange. The worker service consumes these messages 
+with a prefetch_count=1 setting to ensure controlled backpressure and at-least-once delivery 
+through manual acknowledgments.
 
-Dependency Management: To improve reproducibility, the project transitioned to a robust packaging 
-structure with the addition of a setup.py file. This defines package metadata and requirements 
-clearly. Furthermore, pydeps and Graphviz were integrated into the workflow to generate a visual 
-dependency graph (dependency.svg), ensuring the architecture remains clean and free of circular 
-dependencies.
-
-Least-Privilege Database Design: The connection strategy was hardened by removing all hard-coded 
-credentials in favor of environment variables. A dedicated, non-superuser database account was 
-configured with the minimum necessary permissions—specifically SELECT and INSERT on required 
-tables—adhering strictly to the principle of least privilege.
-
-Automated Visualization: The CI pipeline was configured to automatically generate the dependency.svg 
-file on every push. This ensures that the documentation of the system's internal structure stays 
-synchronized with the actual codebase, providing immediate feedback on how new libraries affect the 
-overall project footprint.
+Data Integrity & Idempotence: The ingestion layer was hardened with a watermark table (ingestion_watermarks) 
+to track processed records. Database operations utilize Materialized Views for analytics, which are refreshed 
+asynchronously by the worker. All SQL interactions utilize psycopg parameter binding to prevent SQL injection, 
+and operations are wrapped in per-message transactions to ensure atomicity.
 
 How to Run: 
-1. Initialize postgreSQL locally 
-2. Install requirements.text
-3. Run python3 -m pytest for coverage 
-4. Access documentation via Read the Doc- https://jhu-software-concepts-hma41.readthedocs.io/en/latest/
+Docker Compose: Ensure Docker Desktop is running. In the root module_6 folder, run:
+docker compose up --build
+Access Dashboard: Open http://localhost:8080 to view the Admissions Data Dashboard.
+Monitor RabbitMQ: Access the management console at http://localhost:15672 (guest/guest).
+Trigger Analysis: Click "Update Analysis" on the web UI to publish a task to RabbitMQ; 
+observe the worker logs to see the Materialized View refresh.
+Registry: Pull pre-built images from Docker Hub (e.g., docker pull harryma11/module_6-web:v1).
 
 Fresh Install:
 1) pip
@@ -54,8 +47,9 @@ uv pip sync requirements.txt
 uv pip install -e
 
 Known Bugs/Workarounds: 
+The pull data and update analysis buttons have lost their functionality since last touch. Only after running
+the unit test, did I find that they were not being hit. Should've followed office hour suggestions and run tests
+first before making major changes. This issue will be addressed this week to achieve intended functionalities. 
 To achieve a 10/10 Pylint rating and a successful CI/CD pass, the following configurations were applied: 
 Minor stylistic and non-functional linting rules were suppressed in the .pylintrc file where they did not 
-impact application performance or logic. Additionally, diskcache was explicitly ignored in the .snyk 
-policy file; while it remains necessary for the LLM component’s functionality, it currently lacks the 
-support metadata required for a standard Snyk vulnerability scan, making it a known and accepted dependency risk.
+impact application performance or logic.
