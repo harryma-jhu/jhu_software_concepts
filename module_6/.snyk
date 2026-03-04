@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-PYTHON-DISKCACHE-15268422:
+    - '*':
+        reason: Required for LLM generation module
+        expires: 2026-03-25T15:14:21.079Z
+        created: 2026-02-23T15:14:21.081Z
+patch: {}

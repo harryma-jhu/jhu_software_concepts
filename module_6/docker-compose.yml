@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass123} # can delete
+      POSTGRES_DB: ${POSTGRES_DB:-postgres} # update name
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # create init to create table 
+      - "./src/db/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672" # Management UI
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: ./src/web
+    ports:
+      - "8080:8080"
+    command: python run.py
+    environment:
+      PYTHONPATH: /app:/app/worker
+      DATABASE_URL: postgresql://postgres:pass123@db:5432/postgres
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - ./src/worker:/app/worker:ro
+      - ./src/web:/app
+      - ./src/db:/app/db      # Maps the script folder
+      - ./src/data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  worker:
+    build: ./src/worker
+    environment:
+      DATABASE_URL: postgresql://postgres:pass123@db:5432/postgres
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - ./src/data:/app/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  

@@ -1,0 +1,9 @@
+[run]
+source = src
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    # This specifically targets your line 72
+    bp.run
